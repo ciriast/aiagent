@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 import argparse
 
 load_dotenv()
@@ -15,7 +16,8 @@ args = parser.parse_args()
 
 client = genai.Client(api_key=api_key)
 
-my_response = client.models.generate_content(model="gemini-2.5-flash", contents=args.user_prompt)
+messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
+my_response = client.models.generate_content(model="gemini-2.5-flash", contents=messages)
 
 if my_response.usage_metadata is not None:
     print(f'Prompt tokens: {my_response.usage_metadata.prompt_token_count}')
